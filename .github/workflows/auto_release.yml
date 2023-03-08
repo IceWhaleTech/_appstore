@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@master
+      - name: Get Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.0
         id: compress
@@ -15,10 +18,8 @@ jobs:
           command: c
           files: |
             ./Apps
-          outPath: Apps.tar.gz
-      - name: Get Date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+          outPath: Apps${{ steps.date.outputs.date }}.tar.gz
+
       - name: Create Release
         uses: djnicholson/release-action@v2.11
         with:
@@ -49,7 +50,7 @@ jobs:
       - name: copy tar to target host
         shell: bash
         run: |
-          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 ./dist/*.gz root@10.147.18.11:/var/www/download
+          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 ./*.gz root@10.147.18.11:/var/www/download
           echo "ping success"
       - name: send message
         run: |
