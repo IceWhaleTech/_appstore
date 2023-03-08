@@ -16,11 +16,14 @@ jobs:
           files: |
             ./Apps
           outPath: Apps.tar.gz
+      - name: Get Date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
       - name: Create Release
         uses: djnicholson/release-action@v2.11
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag-name: 'test-tag-name'
-          release-name: 'test-release'
+          tag-name: '${{ steps.date.outputs.date }}'
+          release-name: '${{ steps.date.outputs.date }}'
           asset-name: 'Apps.tar.gz'
           file: './Apps.tar.gz'
