@@ -54,4 +54,4 @@ jobs:
           echo "ping success"
       - name: send message
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS updated"}}'  ${{ secrets.SSH_ROBOT_URL }}
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS-NewAppStore updated"}}'  ${{ secrets.SSH_ROBOT_URL }}
