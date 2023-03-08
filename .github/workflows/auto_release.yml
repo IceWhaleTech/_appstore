@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
-          asset-name: 'casaos-appstore.tar.gz'
+          asset-name: 'linux-all-casaos-appstore.tar.gz'
           file: './build/sysroot/var/lib/casaos-appstore.tar.gz'
       - name: install sshpass
         run: sudo apt install sshpass --yes
