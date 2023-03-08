@@ -1,0 +1,26 @@
+name: auto_release
+on:
+  push:
+    branches:
+      - main
+jobs:
+  releaser:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@master
+      - name: Compress action step
+        uses: a7ul/tar-action@v1.1.0
+        id: compress
+        with:
+          command: c
+          files: |
+            ./Apps
+          outPath: Apps.tar.gz
+      - name: Create Release
+        uses: djnicholson/release-action@v2.11
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag-name: 'test-tag-name'
+          release-name: 'test-release'
+          asset-name: 'Apps.tar.gz'
+          file: './Apps.tar.gz'
