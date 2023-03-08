@@ -18,7 +18,7 @@ jobs:
           command: c
           files: |
             ./Apps
-          outPath: CasaOS-AppStore.tar.gz
+          outPath: ./sysroot/build/sysroot/var/lib/casaos-appstore.tar.gz
 
       - name: Create Release
         uses: djnicholson/release-action@v2.11
@@ -26,8 +26,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
-          asset-name: 'CasaOS-AppStore.tar.gz'
-          file: './CasaOS-AppStore.tar.gz'
+          asset-name: 'casaos-appstore.tar.gz'
+          file: './sysroot/build/sysroot/var/lib/casaos-appstore.tar.gz'
       - name: install sshpass
         run: sudo apt install sshpass --yes
         
