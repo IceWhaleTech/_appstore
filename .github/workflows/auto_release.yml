@@ -25,5 +25,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
-          asset-name: 'Apps.tar.gz'
-          file: './Apps.tar.gz'
+          asset-name: 'Apps${{ steps.date.outputs.date }}.tar.gz'
+          file: './Apps${{ steps.date.outputs.date }}.tar.gz'
+      - name: install sshpass
+        run: sudo apt install sshpass --yes
+        
+      - name: ZeroTier
+        uses: zerotier/github-action@v1.0.1
+        with:
+            network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+            auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+
+      - name: ping host
+        shell: bash
+        run: |
+          count=10
+          while ! ping -c 1 10.147.18.11 ; do
+            echo "waiting..." ;
+            sleep 1 ;
+            let count=count-1
+          done
+          echo "ping success"
+      - name: copy tar to target host
+        shell: bash
+        run: |
+          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 ./dist/*.gz root@10.147.18.11:/var/www/download
+          echo "ping success"
+      - name: send message
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS updated"}}'  ${{ secrets.SSH_ROBOT_URL }}
