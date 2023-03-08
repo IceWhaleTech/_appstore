@@ -12,8 +12,10 @@ jobs:
         id: date
         run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
       
-      - name: Create a tmp directory
-        run: mkdir -p ./build/sysroot/var/lib/casaos-appstore
+      - name: Create a tmp directory and copy files
+        run: |
+          mkdir -p ./build/sysroot/var/lib/casaos-appstore
+          cp -r ./Apps ./build/sysroot/var/lib/casaos-appstore/
 
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.0
@@ -21,7 +23,7 @@ jobs:
         with:
           command: c
           files: |
-            ./Apps
+            ./build/sysroot/var/lib/casaos-appstore
           outPath: ./build/sysroot/var/lib/casaos-appstore.tar.gz
 
       - name: Create Release
