@@ -11,6 +11,10 @@ jobs:
       - name: Get Date
         id: date
         run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
+      
+      - name: Create a tmp directory
+        run: mkdir -p ./build/sysroot/var/lib/casaos-appstore
+
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.0
         id: compress
@@ -18,7 +22,7 @@ jobs:
           command: c
           files: |
             ./Apps
-          outPath: ./sysroot/build/sysroot/var/lib/casaos-appstore.tar.gz
+          outPath: ./build/sysroot/var/lib/casaos-appstore.tar.gz
 
       - name: Create Release
         uses: djnicholson/release-action@v2.11
@@ -27,7 +31,7 @@ jobs:
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
           asset-name: 'casaos-appstore.tar.gz'
-          file: './sysroot/build/sysroot/var/lib/casaos-appstore.tar.gz'
+          file: './build/sysroot/var/lib/casaos-appstore.tar.gz'
       - name: install sshpass
         run: sudo apt install sshpass --yes
         
