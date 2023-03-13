@@ -14,18 +14,16 @@ jobs:
       
       - name: Create a tmp directory and copy files
         run: |
-          mkdir -p ./build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore
-          cp -r ./Apps ./build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore/
-
+          mkdir -p ./build/sysroot/var/lib/casaos/appstore/default
+          cp -r ./Apps ./build/sysroot/var/lib/casaos/appstore/default/
       - name: Compress action step
         uses: a7ul/tar-action@v1.1.0
         id: compress
         with:
           command: c
           files: |
-            ./build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore
-          outPath: ./build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore.tar.gz
-
+            ./build
+          outPath: ./
       - name: Create Release
         uses: djnicholson/release-action@v2.11
         with:
@@ -33,7 +31,7 @@ jobs:
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
           asset-name: 'linux-all-casaos-appstore.tar.gz'
-          file: './build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore.tar.gz'
+          file: './linux-all-appstore.tar.gz'
       - name: install sshpass
         run: sudo apt install sshpass --yes
         
@@ -56,7 +54,7 @@ jobs:
       - name: copy tar to target host
         shell: bash
         run: |
-          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 ./build/sysroot/var/lib/casaos/appstore/default/linux-all-casaos-appstore.tar.gz root@10.147.18.11:/var/www/download
+          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 './linux-all-appstore.tar.gz' root@10.147.18.11:/var/www/download
           echo "ping success"
       - name: send message
         run: |
