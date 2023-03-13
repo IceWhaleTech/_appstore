@@ -23,7 +23,7 @@ jobs:
           command: c
           files: |
             ./build
-          outPath: ./
+          outPath: linux-all-casaos-appstore.tar.gz
       - name: Create Release
         uses: djnicholson/release-action@v2.11
         with:
