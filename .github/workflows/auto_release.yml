@@ -24,6 +24,11 @@ jobs:
           files: |
             ./build
           outPath: linux-all-casaos-appstore.tar.gz
+      - name: command
+        run: |
+          ls
+          echo "-----------------"
+          ls ./build
       - name: Create Release
         uses: djnicholson/release-action@v2.11
         with:
@@ -31,7 +36,7 @@ jobs:
           tag-name: '${{ steps.date.outputs.date }}'
           release-name: '${{ steps.date.outputs.date }}'
           asset-name: 'linux-all-casaos-appstore.tar.gz'
-          file: './linux-all-appstore.tar.gz'
+          file: './build/linux-all-casaos-appstore.tar.gz'
       - name: install sshpass
         run: sudo apt install sshpass --yes
         
