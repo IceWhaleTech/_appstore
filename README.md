@@ -1,1 +1,1 @@
-# CasaOS-NewAppStore
+# _appstore
