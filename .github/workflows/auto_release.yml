@@ -10,36 +10,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@master
-      - name: Get Date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
-      
-      - name: Create a tmp directory and copy files
-        run: |
-          mkdir -p ./build/sysroot/var/lib/casaos/appstore/default
-          cp -r ./Apps ./build/sysroot/var/lib/casaos/appstore/default/
-      - name: Compress action step
-        uses: a7ul/tar-action@v1.1.0
-        id: compress
-        with:
-          command: c
-          files: |
-            ./build
-          outPath: linux-all-casaos-appstore.tar.gz
-      - name: command
-        run: |
-          ls
-          echo "-----------------"
-          ls ./build
-      - name: Create Release
-        uses: djnicholson/release-action@v2.11
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag-name: '${{ steps.date.outputs.date }}'
-          release-name: '${{ steps.date.outputs.date }}'
-          asset-name: 'linux-all-casaos-appstore.tar.gz'
-          file: './linux-all-casaos-appstore.tar.gz'
-          
+     
       - name: Download main.zip
         run: |
           wget -q -O main.zip https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip
@@ -54,32 +25,3 @@ jobs:
           bucket: casaos
           assets: |
             ./main.zip:/IceWhaleTech/_appstore/archive/refs/heads/main.zip
-
-      - name: install sshpass
-        run: sudo apt install sshpass --yes
-        
-      - name: ZeroTier
-        uses: zerotier/github-action@v1.0.1
-        with:
-            network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
-            auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
-
-      - name: ping host
-        shell: bash
-        run: |
-          count=10
-          while ! ping -c 1 10.147.18.11 ; do
-            echo "waiting..." ;
-            sleep 1 ;
-            let count=count-1
-          done
-          echo "ping success"
-      - name: copy tar to target host
-        shell: bash
-        run: |
-          sshpass -p "${{ secrets.ssh_password }}" scp -r -o StrictHostKeyChecking=no -P 22 './linux-all-casaos-appstore.tar.gz' root@10.147.18.11:/var/www/download
-          echo "ping success"
-      - name: send message
-        run: |
-          curl -X POST -H "Content-Type: application/json" -d '{"msg_type":"text","content":{"text":"CasaOS-NewAppStore updated"}}'  ${{ secrets.SSH_ROBOT_URL }}
-          
