@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+  
 jobs:
   releaser:
     runs-on: ubuntu-22.04
@@ -37,6 +39,23 @@ jobs:
           release-name: '${{ steps.date.outputs.date }}'
           asset-name: 'linux-all-casaos-appstore.tar.gz'
           file: './linux-all-casaos-appstore.tar.gz'
+          
+      - name: Download main.zip
+        run: |
+          ls
+          wget -q -O main.zip https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip
+          
+      - name: Upload to oss
+        id: upload_to_oss
+        uses: tvrcgo/upload-to-oss@master
+        with:
+          key-id: ${{ secrets.OSS_KEY_ID }}
+          key-secret: ${{ secrets.OSS_KEY_SECRET }}
+          region: oss-cn-shanghai
+          bucket: casaos
+          assets: |
+            ./main.zip:/IceWhaleTech/CasaOS-UI/archive/refs/heads/main.zip
+
       - name: install sshpass
         run: sudo apt install sshpass --yes
         
