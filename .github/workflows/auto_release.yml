@@ -42,8 +42,8 @@ jobs:
           
       - name: Download main.zip
         run: |
-          ls
           wget -q -O main.zip https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip
+          ls
           
       - name: Upload to oss
         id: upload_to_oss
