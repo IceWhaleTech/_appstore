@@ -43,7 +43,6 @@ jobs:
       - name: Download main.zip
         run: |
           wget -q -O main.zip https://github.com/IceWhaleTech/_appstore/archive/refs/heads/main.zip
-          ls
           
       - name: Upload to oss
         id: upload_to_oss
@@ -54,7 +53,7 @@ jobs:
           region: oss-cn-shanghai
           bucket: casaos
           assets: |
-            ./main.zip:/IceWhaleTech/CasaOS-UI/archive/refs/heads/main.zip
+            ./main.zip:/IceWhaleTech/_appstore/archive/refs/heads/main.zip
 
       - name: install sshpass
         run: sudo apt install sshpass --yes
